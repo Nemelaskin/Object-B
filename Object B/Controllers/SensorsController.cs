@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
 using Object_B.Models.Context;
 
 namespace Object_B.Controllers
 {
-    public class SensorsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SensorsController : ControllerBase
     {
         private readonly AllDataContext _context;
 
@@ -19,130 +21,62 @@ namespace Object_B.Controllers
             _context = context;
         }
 
-        // GET: Sensors
-        public async Task<IActionResult> Index()
+        // GET: api/Sensors
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Sensor>>> GetSensors()
         {
-            return View(await _context.Sensors.ToListAsync());
+            return await _context.Sensors.ToListAsync();
         }
 
-        // GET: Sensors/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Sensors/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Sensor>> GetSensor(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var sensor = await _context.Sensors.FindAsync(id);
 
-            var sensor = await _context.Sensors
-                .FirstOrDefaultAsync(m => m.SensorId == id);
             if (sensor == null)
             {
                 return NotFound();
             }
 
-            return View(sensor);
+            return sensor;
         }
 
-        // GET: Sensors/Create
-        public IActionResult Create()
+        // PUT: api/Sensors/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut]
+        public async Task<IActionResult> PutSensor(Sensor sensor)
         {
-            return View();
+            _context.Entry(sensor).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
-        // POST: Sensors/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: api/Sensors
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SensorId,NameSensor,Coordinates")] Sensor sensor)
+        public async Task<ActionResult<Sensor>> PostSensor(Sensor sensor)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(sensor);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(sensor);
+            _context.Sensors.Add(sensor);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetSensor", new { id = sensor.SensorId }, sensor);
         }
 
-        // GET: Sensors/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // DELETE: api/Sensors/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSensor(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var sensor = await _context.Sensors.FindAsync(id);
             if (sensor == null)
             {
                 return NotFound();
             }
-            return View(sensor);
-        }
 
-        // POST: Sensors/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SensorId,NameSensor,Coordinates")] Sensor sensor)
-        {
-            if (id != sensor.SensorId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(sensor);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SensorExists(sensor.SensorId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(sensor);
-        }
-
-        // GET: Sensors/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var sensor = await _context.Sensors
-                .FirstOrDefaultAsync(m => m.SensorId == id);
-            if (sensor == null)
-            {
-                return NotFound();
-            }
-
-            return View(sensor);
-        }
-
-        // POST: Sensors/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var sensor = await _context.Sensors.FindAsync(id);
             _context.Sensors.Remove(sensor);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool SensorExists(int id)

@@ -27,7 +27,7 @@ namespace Object_B.Models
                 var room2 = new Room { NameRoom = "testRoom2", CoordinatesRoom = "33 662 1" };
                 var room3 = new Room { NameRoom = "testRoom3", CoordinatesRoom = "88 13 22" };
 
-                var company1 = new Company { MapLink = "", Room = new List<Room> { room1 }, Owner = user1, NameCompany = "TestCompany1" };
+                var company1 = new Company { MapLink = "", Room = new List<Room> { room1 }, Owner = "Empty", NameCompany = "TestCompany1" };
                
                 room1.Company = company1;
                 room2.Company = company1;

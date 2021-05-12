@@ -10,6 +10,7 @@ namespace Object_B.Models
         public int RoomId { get; set; }
         public string NameRoom { get; set; }
         public Company Company { get; set; }
+        public int CompanyId { get; set; }
         public string CoordinatesRoom { get; set; }
 
     }

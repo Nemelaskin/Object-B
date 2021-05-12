@@ -3,28 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Object_B.Models.Context;
 using Object_B.Models;
-using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Object_B.Controllers
 {
-    public class MapCompController : Controller
+    public class MonitoringMap : Controller
     {
         AllDataContext context;
-        public MapCompController(AllDataContext context)
+        public MonitoringMap(AllDataContext context)
         {
             this.context = context;
         }
+        public IActionResult Index(string selectCom = "", string selectRoom = "")
+        {
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult CreateMap(string selectCom = "", string selectRoom = "")
-        {
+
             if (selectRoom == "")
             {
                 var s = context.Rooms.Where(u => u.RoomId == 1).Select(u => new { u.NameRoom, u.RoomId }).First();
@@ -51,8 +47,6 @@ namespace Object_B.Controllers
             ViewBag.Companies = context.Companies.Select(u => u.NameCompany);
             return View();
         }
-
-
         [HttpGet]
         public string CreateRoom(int selectRoomId, string newRoom = "")
         {
@@ -71,6 +65,6 @@ namespace Object_B.Controllers
             var t = JsonConvert.SerializeObject(temp);
             return t;
         }
-        
     }
+    
 }

@@ -10,6 +10,7 @@ namespace Object_B.Models
         public int SensorId { get; set; }
         public string NameSensor { get; set; }
         public User User { get; set; }
+        public int UserId { get; set; }
         public string Coordinates { get; set; }
 
     }

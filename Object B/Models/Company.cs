@@ -12,7 +12,7 @@ namespace Object_B.Models
         public string MapLink { get; set; }
         public string NameCompany { get; set; }
         public List<Room> Room { get; set; } = new List<Room>();
-        public User Owner { get; set; }
+        public string Owner { get; set; }
 
     }
 }

@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
 using Object_B.Models.Context;
 
 namespace Object_B.Controllers
 {
-    public class VisitsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class VisitsController : ControllerBase
     {
         private readonly AllDataContext _context;
 
@@ -19,130 +21,60 @@ namespace Object_B.Controllers
             _context = context;
         }
 
-        // GET: Visits
-        public async Task<IActionResult> Index()
+        // GET: api/Visits
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Visit>>> GetVisits()
         {
-            return View(await _context.Visits.ToListAsync());
+            return await _context.Visits.ToListAsync();
         }
 
-        // GET: Visits/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: api/Visits/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Visit>> GetVisit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var visit = await _context.Visits.FindAsync(id);
 
-            var visit = await _context.Visits
-                .FirstOrDefaultAsync(m => m.VisitId == id);
             if (visit == null)
             {
                 return NotFound();
             }
 
-            return View(visit);
+            return visit;
         }
 
-        // GET: Visits/Create
-        public IActionResult Create()
+        // PUT: api/Visits/5
+        [HttpPut]
+        public async Task<IActionResult> PutVisit(Visit visit)
         {
-            return View();
+            _context.Entry(visit).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
-        // POST: Visits/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: api/Visits
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VisitId,VisitTime")] Visit visit)
+        public async Task<ActionResult<Visit>> PostVisit(Visit visit)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(visit);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(visit);
+            _context.Visits.Add(visit);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetVisit", new { id = visit.VisitId }, visit);
         }
 
-        // GET: Visits/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // DELETE: api/Visits/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVisit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var visit = await _context.Visits.FindAsync(id);
             if (visit == null)
             {
                 return NotFound();
             }
-            return View(visit);
-        }
 
-        // POST: Visits/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VisitId,VisitTime")] Visit visit)
-        {
-            if (id != visit.VisitId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(visit);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VisitExists(visit.VisitId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(visit);
-        }
-
-        // GET: Visits/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var visit = await _context.Visits
-                .FirstOrDefaultAsync(m => m.VisitId == id);
-            if (visit == null)
-            {
-                return NotFound();
-            }
-
-            return View(visit);
-        }
-
-        // POST: Visits/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var visit = await _context.Visits.FindAsync(id);
             _context.Visits.Remove(visit);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return NoContent();
         }
 
         private bool VisitExists(int id)

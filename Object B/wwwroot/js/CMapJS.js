@@ -1,18 +1,18 @@
-﻿
+﻿if (document.cookie == null) {
+    STATUS = "develop";
+    setCookie('STATUS', STATUS, { 'max-age': 3600, samesite: 'strict' });
+}
 
-/*let allRooms = "";
-allRooms = document.cookie.allRooms;
-//alert(allRooms);
-console.log(allRooms);
-if (allRooms != "") {
-    
-}*/
+var STATUS = document.cookie;
+STATUS = STATUS.split('=')[1];
 
 let number = 1;
-for (var i = 0; i < 1034; i++) { //47 ряд
+for (var i = 0; i < 52 * 30; i++) { //52 ряд
     CreateBlock(number);
     number++;
 }
+
+
 
 function CreateBlock(id) {
     var content = document.querySelector("#places")
@@ -22,9 +22,7 @@ function CreateBlock(id) {
     node.style.background = "RED";
     node.style.height = "20px";
     node.style.float = "left";
-    node.style.marginTop = "1px";
     node.style.marginBottom = "0px";
-    node.style.border = "1px solid white";
     node.setAttribute("ordered", 0);
     node.addEventListener('click', SwitchState);
     content.appendChild(node);
@@ -41,19 +39,19 @@ function SwitchState() {
         let ids = Number(this.id);
         let leftItem = document.getElementById(String(ids - 1));
         let rightItem = document.getElementById(String(ids + 1));
-        let upItem = document.getElementById(String(ids - 47));
-        let downItem = document.getElementById(String(ids + 47));
-        if (num == 0) {
+        let upItem = document.getElementById(String(ids - 52));
+        let downItem = document.getElementById(String(ids + 52));
+        if (num == 0 && STATUS == "develop") {
             this.style.background = "Blue"
             this.setAttribute("ordered", 1);
             num++;
         }
-        if ((rightItem.getAttribute("ordered") == 0 && leftItem.getAttribute("ordered") == 1
-            || rightItem.getAttribute("ordered") == 1 && leftItem.getAttribute("ordered") == 0)
+        if (leftItem.getAttribute("ordered") == 1  || rightItem.getAttribute("ordered") == 1
             || upItem.getAttribute("ordered") == 1 || downItem.getAttribute("ordered") == 1) {
             this.style.background = "Blue"
             this.setAttribute("ordered", 1);
             num++;
+
         }
         else {
 
@@ -61,69 +59,115 @@ function SwitchState() {
         }
 
     }
-    console.log(num);
+
 }
 
 
-
+let newRoom = "";
 function newTestButt() {
     var places = $('[ordered = 1]');
     if (places != undefined && places.length > 0) {
-        let newRoom = "";
+
         for (var i = 0; i < places.length; i++) {
-            newRoom += " " + places[i].getAttribute("id");
+            newRoom += places[i].getAttribute("id") + " ";
 
             places[i].style.background = "Green";
             places[i].setAttribute("ordered", 2);
             num = 0;
-
+            location.href = location.href;
         }
-        //allRooms += newRoom;
-        //alert(allRooms);
-        //setCookie('allRooms', allRooms, { 'max-age': 3600, samesite:'strict'});
+
         postData(newRoom);
     }
 }
 
 
+let actualRoom = document.getElementById("actualRoom").innerHTML.split(':')[1];
+actualRoom = actualRoom.split('<')[0];
+actualRoom = Number(actualRoom);
+
+postData(newRoom);
+
 function postData(newRoom) {
+    fetch("http://localhost:5000/MapComp/CreateRoom?selectRoomId=" + actualRoom + "&newRoom=" + newRoom)
+        .then(response => {
 
-    if (newRoom != "") {
-        fetch("http://localhost:5000/MapComp/CreateRoom?newRoom="+newRoom)
-            .then(response => {
-                return response.text();
-            }).then(data => {
-                console.log(data);
-            });
-    }
-
+            return response.json();
+        }).then(data => {
+            countRooms(data);
+            SelectRoom(data);
+        });
 }
 
-/*
-fetch("http://localhost:5000/MapComp/Test")
-    .then(response => {
-        return response.json();
-    }).then(data => {
-        //ViewDrone(data, 0);
-        DropMenu(data);
-    }
-function DropMenu(data) {
-    var doc = document;
-    var id;
-    var dropSomethink = doc.getElementById("myDropdown");
+function SelectRoom(data) {
+    let room = "";
     for (var i = 0; i < data.length; i++) {
-        id = i;
-        var elem = doc.createElement("a");
-        elem.addEventListener("click", () => {
-            //ViewDrone(data, id);
-        });
-        elem.innerHTML = data[i]["NameRoom"] + "   " + data[i]["RoomId"];
-        dropSomethink.appendChild(elem);
+        if (data[i]['RoomId'] == actualRoom) {
+            room = data[i]['CoordinatesRoom'];
+        }
     }
-}*/
+    if (room != "") {
+        room = room.split(" ");
+        //console.log(room);
+        if (STATUS == "develop") {
+            var places = $('[ordered = 2]');
+            for (var i = 0; i < places.length; i++) {
+                for (var j = 0; j < room.length; j++) {
+                    if (places[i].getAttribute("id") == room[j]) {
+                        places[i].style.background = "Blue";
+                        places[i].setAttribute("ordered", 1);
+                        num++;
+                    }
+                }
+            }
+        }
+
+    }
+}
 
 
-/*
+function countRooms(data) {
+    var nowCompany = document.getElementById("CompanyNow").innerHTML.split('<')[0];
+    let allRooms = "";
+    for (var i = 0; i < data.length; i++) {
+        if (data[i]['Company']['NameCompany'] == nowCompany) {
+            allRooms += data[i]['CoordinatesRoom'] + " ";
+        }
+    }
+    blockRooms(allRooms);
+}
+
+function blockRooms(allRooms) {
+
+    allRooms = allRooms.split(' ');
+    var places = $('[ordered = 0]');
+
+    if (places != undefined && places.length > 0) {
+
+        for (var i = 0; i < places.length; i++) {
+            for (var j = 0; j < allRooms.length; j++) {
+                if (places[i].getAttribute("id") == allRooms[j]) {
+                    places[i].style.background = "Green";
+                    places[i].setAttribute("ordered", 2);
+
+                }
+            }
+        }
+    }
+}
+
+
+
+function statusFunc() {
+    if (STATUS == "develop")
+        STATUS = "save";
+    else
+        STATUS = "develop";
+    setCookie('STATUS', STATUS, { 'max-age': 3600, samesite: 'strict' });
+    location.href = location.href;
+}
+
+
 function setCookie(name, value, options = {}) {
 
     options = {
@@ -148,4 +192,3 @@ function setCookie(name, value, options = {}) {
 
     document.cookie = updatedCookie;
 }
-*/

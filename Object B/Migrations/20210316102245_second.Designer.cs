@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Object_B.Models.Context;
 
 namespace Object_B.Migrations
 {
     [DbContext(typeof(AllDataContext))]
-    partial class AllDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210316102245_second")]
+    partial class second
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,10 +34,12 @@ namespace Object_B.Migrations
                     b.Property<string>("NameCompany")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Owner")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("OwnerUserId")
+                        .HasColumnType("int");
 
                     b.HasKey("CompanyId");
+
+                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("Companies");
                 });
@@ -109,7 +113,7 @@ namespace Object_B.Migrations
                     b.Property<string>("NameSensor")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("SensorId");
@@ -138,10 +142,10 @@ namespace Object_B.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PositionId")
+                    b.Property<int?>("PositionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("SecondName")
@@ -163,7 +167,7 @@ namespace Object_B.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("RoomId")
+                    b.Property<int?>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -181,6 +185,15 @@ namespace Object_B.Migrations
                     b.ToTable("Visits");
                 });
 
+            modelBuilder.Entity("Object_B.Models.Company", b =>
+                {
+                    b.HasOne("Object_B.Models.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerUserId");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("Object_B.Models.Room", b =>
                 {
                     b.HasOne("Object_B.Models.Company", "Company")
@@ -196,9 +209,7 @@ namespace Object_B.Migrations
                 {
                     b.HasOne("Object_B.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -207,15 +218,11 @@ namespace Object_B.Migrations
                 {
                     b.HasOne("Object_B.Models.Position", "Position")
                         .WithMany()
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PositionId");
 
                     b.HasOne("Object_B.Models.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Position");
 
@@ -226,9 +233,7 @@ namespace Object_B.Migrations
                 {
                     b.HasOne("Object_B.Models.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoomId");
 
                     b.HasOne("Object_B.Models.User", "User")
                         .WithMany()

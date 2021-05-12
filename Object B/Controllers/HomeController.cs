@@ -7,24 +7,32 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Object_B.Models.Context;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Object_B.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        AllDataContext context;
+        public HomeController(ILogger<HomeController> logger, AllDataContext context)
         {
+            this.context = context;
             _logger = logger;
         }
-        [Authorize]
+        
         public IActionResult Index()
         {
             return View();
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+        public IActionResult News()
         {
             return View();
         }

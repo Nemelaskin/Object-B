@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Object B", "Object B\Object B.csproj", "{4F9FBC8E-54D4-4B91-A88C-E7130219D79D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Object B", "Object B\Object B.csproj", "{4F9FBC8E-54D4-4B91-A88C-E7130219D79D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Common", "Auth.Common\Auth.Common.csproj", "{BD95D3C6-239F-400C-8830-FF95171B4EA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{4F9FBC8E-54D4-4B91-A88C-E7130219D79D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F9FBC8E-54D4-4B91-A88C-E7130219D79D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F9FBC8E-54D4-4B91-A88C-E7130219D79D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD95D3C6-239F-400C-8830-FF95171B4EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD95D3C6-239F-400C-8830-FF95171B4EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD95D3C6-239F-400C-8830-FF95171B4EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD95D3C6-239F-400C-8830-FF95171B4EA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
