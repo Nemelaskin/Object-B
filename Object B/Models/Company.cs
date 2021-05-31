@@ -14,5 +14,6 @@ namespace Object_B.Models
         public List<Room> Room { get; set; } = new List<Room>();
         public string Owner { get; set; }
 
+
     }
 }

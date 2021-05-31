@@ -18,20 +18,31 @@ namespace Object_B.Controllers
         {
             this.context = context;
         }
-        
+
         [HttpGet]
-        [Route ("index")]
-        
+        [Route("index")]
+
         public List<RatingTable> Rating()
         {
             var users = context.Users.ToList();
-            var visits = context.Visits.ToList();
+            var visitsTemp = context.Visits.ToList();
 
             CompareUsers CompUsers = new CompareUsers();
             List<RatingTable> ratTable = new List<RatingTable>();
 
             //var month = DateTime.Now.Month;
             //DateTime.DaysInMonth(2021, month);
+
+            var dateNow = DateTime.Now.ToString().Split('.');
+            dateNow[2] = dateNow[2].Split(' ')[0];
+            List<Visit> visits = new List<Visit>();
+            for (int i = 0; i < visitsTemp.Count(); i++)
+            {
+                var dateVisit = visitsTemp[i].VisitTime.ToString().Split('.');
+                dateVisit[2] = dateVisit[2].Split(' ')[0];
+                if (dateVisit[1] == dateNow[1] && dateVisit[2] == dateNow[2])
+                    visits.Add(visitsTemp[i]);
+            }
 
             for (int j = 0; j < users.Count(); j++)
             {
@@ -58,7 +69,6 @@ namespace Object_B.Controllers
             }
             ratTable.Sort(CompUsers);
 
-            //ViewBag.ratTab = ratTable;
             return ratTable;
         }
     }
