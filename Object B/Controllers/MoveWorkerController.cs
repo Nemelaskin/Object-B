@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Object_B.Models.Context;
-using Object_B.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Object_B.Controllers

@@ -4,7 +4,6 @@ using Object_B.Models.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace Object_B.Controllers
@@ -30,8 +29,6 @@ namespace Object_B.Controllers
             CompareUsers CompUsers = new CompareUsers();
             List<RatingTable> ratTable = new List<RatingTable>();
 
-            //var month = DateTime.Now.Month;
-            //DateTime.DaysInMonth(2021, month);
 
             var dateNow = DateTime.Now.ToString().Split('.');
             dateNow[2] = dateNow[2].Split(' ')[0];

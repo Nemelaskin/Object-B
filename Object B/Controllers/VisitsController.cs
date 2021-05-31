@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
@@ -21,14 +19,11 @@ namespace Object_B.Controllers
             _context = context;
         }
 
-        // GET: api/Visits
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Visit>>> GetVisits()
         {
             return await _context.Visits.ToListAsync();
         }
-
-        // GET: api/Visits/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Visit>> GetVisit(int id)
         {
@@ -42,7 +37,6 @@ namespace Object_B.Controllers
             return visit;
         }
 
-        // PUT: api/Visits/5
         [HttpPut]
         public async Task<IActionResult> PutVisit(Visit visit)
         {
@@ -51,7 +45,6 @@ namespace Object_B.Controllers
             return NoContent();
         }
 
-        // POST: api/Visits
         [HttpPost]
         public async Task<ActionResult<Visit>> PostVisit(Visit visit)
         {
@@ -61,7 +54,6 @@ namespace Object_B.Controllers
             return CreatedAtAction("GetVisit", new { id = visit.VisitId }, visit);
         }
 
-        // DELETE: api/Visits/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVisit(int id)
         {
@@ -75,11 +67,6 @@ namespace Object_B.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool VisitExists(int id)
-        {
-            return _context.Visits.Any(e => e.VisitId == id);
         }
     }
 }

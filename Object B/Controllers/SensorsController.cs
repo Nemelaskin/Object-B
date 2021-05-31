@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
@@ -21,14 +19,12 @@ namespace Object_B.Controllers
             _context = context;
         }
 
-        // GET: api/Sensors
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sensor>>> GetSensors()
         {
             return await _context.Sensors.ToListAsync();
         }
 
-        // GET: api/Sensors/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Sensor>> GetSensor(int id)
         {
@@ -42,8 +38,6 @@ namespace Object_B.Controllers
             return sensor;
         }
 
-        // PUT: api/Sensors/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
         public async Task<IActionResult> PutSensor(Sensor sensor)
         {
@@ -51,9 +45,6 @@ namespace Object_B.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
-        // POST: api/Sensors
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Sensor>> PostSensor(Sensor sensor)
         {
@@ -62,8 +53,6 @@ namespace Object_B.Controllers
 
             return CreatedAtAction("GetSensor", new { id = sensor.SensorId }, sensor);
         }
-
-        // DELETE: api/Sensors/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSensor(int id)
         {
@@ -77,11 +66,6 @@ namespace Object_B.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool SensorExists(int id)
-        {
-            return _context.Sensors.Any(e => e.SensorId == id);
         }
     }
 }

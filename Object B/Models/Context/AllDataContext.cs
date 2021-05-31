@@ -15,7 +15,6 @@ namespace Object_B.Models.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Visit> Visits { get; set; }
         public DbSet<Sensor> Sensors { get; set; }
-        //public DbSet<RatingTable> RatingTable { get; set; }
 
         public AllDataContext(DbContextOptions<AllDataContext> options)
             : base(options)

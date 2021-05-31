@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
@@ -21,14 +19,12 @@ namespace Object_B.Controllers
             _context = context;
         }
 
-        // GET: api/Positions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Position>>> GetPositions()
         {
             return await _context.Positions.ToListAsync();
         }
 
-        // GET: api/Positions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Position>> GetPosition(int id)
         {
@@ -42,8 +38,6 @@ namespace Object_B.Controllers
             return position;
         }
 
-        // PUT: api/Positions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
         public async Task<IActionResult> PutPosition(Position position)
         {
@@ -52,8 +46,6 @@ namespace Object_B.Controllers
             return NoContent();
         }
 
-        // POST: api/Positions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Position>> PostPosition(Position position)
         {
@@ -63,7 +55,6 @@ namespace Object_B.Controllers
             return CreatedAtAction("GetPosition", new { id = position.PositionId }, position);
         }
 
-        // DELETE: api/Positions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePosition(int id)
         {
@@ -77,11 +68,6 @@ namespace Object_B.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool PositionExists(int id)
-        {
-            return _context.Positions.Any(e => e.PositionId == id);
         }
     }
 }
