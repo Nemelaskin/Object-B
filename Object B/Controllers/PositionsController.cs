@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
@@ -9,6 +10,7 @@ using Object_B.Models.Context;
 namespace Object_B.Controllers
 {
     [Route("api/[controller]")]
+    
     [ApiController]
     public class PositionsController : ControllerBase
     {

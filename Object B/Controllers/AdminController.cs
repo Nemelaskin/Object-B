@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Object_B.Models.Context;
 using Object_B.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Object_B.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private AdminViewModel adminModel = new AdminViewModel();

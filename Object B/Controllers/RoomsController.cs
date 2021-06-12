@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
@@ -18,13 +19,13 @@ namespace Object_B.Controllers
         {
             _context = context;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
         {
             return await _context.Rooms.ToListAsync();
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
@@ -36,6 +37,7 @@ namespace Object_B.Controllers
             }
             return room;
         }
+        [Authorize(Roles = "admin")]
         [HttpPut]
         public async Task<IActionResult> PutRoom(Room room)
         {
@@ -48,7 +50,7 @@ namespace Object_B.Controllers
 
             return NoContent();
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
@@ -57,7 +59,7 @@ namespace Object_B.Controllers
 
             return CreatedAtAction("GetRoom", new { id = room.RoomId }, room);
         }
-
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {

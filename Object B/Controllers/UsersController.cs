@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
@@ -10,6 +11,7 @@ namespace Object_B.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class UsersController : ControllerBase
     {
         private readonly AllDataContext _context;
@@ -39,6 +41,7 @@ namespace Object_B.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutUser(User user)
         {
             _context.Entry(user).State = EntityState.Modified;
@@ -47,6 +50,7 @@ namespace Object_B.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
@@ -55,6 +59,7 @@ namespace Object_B.Controllers
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);

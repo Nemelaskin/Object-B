@@ -2,15 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Object_B.Models.Context;
 using Object_B.Models;
-using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Object_B.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class MapCompController : Controller
     {
         AllDataContext context;

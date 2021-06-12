@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Object_B.Models;
 using Object_B.Models.Context;
 using System;
@@ -10,6 +11,7 @@ namespace Object_B.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class RatingTableController : ControllerBase
     {
         AllDataContext context;
@@ -20,7 +22,6 @@ namespace Object_B.Controllers
 
         [HttpGet]
         [Route("index")]
-
         public List<RatingTable> Rating()
         {
             var users = context.Users.ToList();
