@@ -8,6 +8,7 @@ namespace Object_B.Models
     public class MapModel
     {
         public string Map { get; set; }
+        public string nameCompany { get; set; }
 
     }
 }

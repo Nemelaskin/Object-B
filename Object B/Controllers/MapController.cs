@@ -31,8 +31,20 @@ namespace Object_B.Controllers
         {
             if (uploadedFile != null)
             {
-                MapSave.SaveMapToRelativePath(uploadedFile, @"\res\Maps");
-                return Ok();
+                MapSave mapSave = new MapSave(_context);
+                string path = mapSave.SaveMapToRelativePath(uploadedFile, @"\res\Maps");
+                if (path != "")
+                {
+                    try
+                    {
+                        mapSave.SaveMapToDataBase(path, uploadedFile.nameCompany);
+                        return Ok();
+                    }
+                    catch
+                    {
+                        return BadRequest();
+                    }
+                }
             }
             return BadRequest();
         }
