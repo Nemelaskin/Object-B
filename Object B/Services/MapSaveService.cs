@@ -1,20 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Object_B.Models;
+﻿using Object_B.Models;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Object_B.Models.Context;
 
-namespace Object_B.Services.MapServices
+namespace Object_B.Services
 {
-    public class MapSave
+    public class MapSaveService
     {
         AllDataContext context;
-        public MapSave(AllDataContext context)
+        public MapSaveService(AllDataContext context)
         {
             this.context = context;
         }
@@ -31,19 +28,20 @@ namespace Object_B.Services.MapServices
                 byte[] bytes = Convert.FromBase64String(map[1]);
                 using (Image image = Image.FromStream(new MemoryStream(bytes)))
                 {
-                    
                     directory = directory + path;
-                    Environment.CurrentDirectory = directory;
                     switch (format)
                     {
                         case "png":
-                            image.Save("MainCompanyMap.png", ImageFormat.Png);
+                            image.Save(directory + @"\MainCompanyMap.png", ImageFormat.Png);
+                            directory += @"\MainCompanyMap.png";
                             break;
                         case "jpeg":
-                            image.Save("MainCompanyMap.jpeg", ImageFormat.Jpeg);
+                            image.Save(directory + @"\MainCompanyMap.jpeg", ImageFormat.Jpeg);
+                            directory += @"\MainCompanyMap.jpeg";
                             break;
                         case "jpg":
-                            image.Save("MainCompanyMap.jpeg", ImageFormat.Jpeg);
+                            image.Save(directory + @"\MainCompanyMap.jpeg", ImageFormat.Jpeg);
+                            directory += @"\MainCompanyMap.jpeg";
                             break;
                         default:
                             return "";

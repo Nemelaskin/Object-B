@@ -11,7 +11,7 @@ namespace Object_B.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "admin")]
+    
     public class RolesController : ControllerBase
     {
         private readonly AllDataContext _context;

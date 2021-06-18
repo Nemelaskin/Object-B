@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 namespace Object_B.Controllers
 {
     [Authorize(Roles = "admin")]
-    public class MapCompController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MapCompController : ControllerBase
     {
         AllDataContext context;
         public MapCompController(AllDataContext context)
@@ -19,48 +21,14 @@ namespace Object_B.Controllers
             this.context = context;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-        public IActionResult CreateMap(string selectCom = "", string selectRoom = "")
-        {
-            if (selectRoom == "")
-            {
-                var s = context.Rooms.Where(u => u.RoomId == 1).Select(u => new { u.NameRoom, u.RoomId }).First();
-                ViewBag.SelectRoomName = s.NameRoom;
-                ViewBag.SelectRoomId = s.RoomId;
-            }
-            else
-            {
-                var s = context.Rooms.Where(u => u.NameRoom == selectRoom).Select(u => new { u.NameRoom, u.RoomId }).First();
-                ViewBag.SelectRoomName = s.NameRoom;
-                ViewBag.SelectRoomId = s.RoomId;
-            }
-
-            if (selectCom == "")
-            {
-                ViewBag.SelectCom = context.Companies.Where(u => u.CompanyId == 1).Select(u => u.NameCompany).First();
-                ViewBag.Rooms = context.Rooms.Where(u => u.Company.CompanyId == 1).Select(u => u.NameRoom);
-            }
-            else
-            {
-                ViewBag.SelectCom = context.Companies.Where(u => u.NameCompany == selectCom).Select(u => u.NameCompany).First();
-                ViewBag.Rooms = context.Rooms.Where(u => u.Company.NameCompany == selectCom).Select(u => u.NameRoom);
-            }
-            ViewBag.Companies = context.Companies.Select(u => u.NameCompany);
-            return View();
-        }
-
-
-        [HttpGet]
+        [HttpGet("CreateRoom")]
         public string CreateRoom(int selectRoomId, string newRoom = "")
         {
             Console.WriteLine(newRoom);
             if (newRoom != null)
             {
-                var _y = context.Rooms.Find(selectRoomId);
-                _y.CoordinatesRoom = newRoom;
+                var room = context.Rooms.Find(selectRoomId);
+                room.CoordinatesRoom = newRoom;
                 context.SaveChanges();
             }
             var temp = (IEnumerable<Room>)context.Rooms.Include(u => u.Company);
@@ -68,8 +36,8 @@ namespace Object_B.Controllers
             {
                 i.Company.Room = null;
             }
-            var t = JsonConvert.SerializeObject(temp);
-            return t;
+            var response = JsonConvert.SerializeObject(temp);
+            return response;
         }
         
     }

@@ -3,7 +3,10 @@ using System;
 using Object_B.Models.Context;
 using Microsoft.AspNetCore.Hosting;
 using Object_B.Models;
-using Object_B.Services.MapServices;
+using Object_B.Services;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Linq;
 
 namespace Object_B.Controllers
 {
@@ -19,11 +22,20 @@ namespace Object_B.Controllers
             _appEnvironment = appEnviroment;
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        [HttpGet("ViewMap")]
+        public ActionResult View(string nameCompany)
         {
-            var image = System.IO.File.OpenRead("res/maket1.jpg");
-            return File(image, "image/jpg");
+            try
+            {
+                var company = _context.Companies.FirstOrDefault(u => u.NameCompany == nameCompany);
+                Byte[] b = System.IO.File.ReadAllBytes(company.MapLink);
+                return File(b, "image/png", "testingSendImage");
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            
         }
 
         [HttpPost("Download")]
@@ -31,7 +43,7 @@ namespace Object_B.Controllers
         {
             if (uploadedFile != null)
             {
-                MapSave mapSave = new MapSave(_context);
+                MapSaveService mapSave = new MapSaveService(_context);
                 string path = mapSave.SaveMapToRelativePath(uploadedFile, @"\res\Maps");
                 if (path != "")
                 {

@@ -1,18 +1,14 @@
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore;
-    using Object_B.Models.Context;
-    using Object_B.Models;
-    using Microsoft.AspNetCore.Authentication.Cookies;
-    using Auth.Common;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Object_B.Models.Context;
+using Object_B.Models;
+using Auth.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Object_B.Services;
 
 namespace Object_B
 {
@@ -29,7 +25,7 @@ namespace Object_B
         {
             var authOptions = Configuration.GetSection("Auth").Get<AuthOptions>();
 
-
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
             {
@@ -48,20 +44,19 @@ namespace Object_B
                     ValidateIssuerSigningKey = true,
                 };
             });
-                
 
+            services.AddSignalR();
             services.AddControllersWithViews();
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AllDataContext>(options => options.UseSqlServer(connection));
 
             var authOptionsConfiguration = Configuration.GetSection("Auth");
             services.Configure<AuthOptions>(authOptionsConfiguration);
-            
+
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            //services.AddCorsOp();
             services.AddCors();
-            
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AllDataContext context)
@@ -75,25 +70,23 @@ namespace Object_B
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
-            
+
             app.UseRouting();
-            app.UseCors(builder => {
-                builder.AllowAnyOrigin()
-                      .AllowAnyMethod()
+            
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyMethod()
                       .AllowAnyHeader();
+                builder.WithOrigins("http://127.0.0.1:5500").AllowCredentials();
             });
 
-            app.UseAuthentication();    // аутентификация
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.UseEndpoints(endpoints =>
             {
-                
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllers();
+                endpoints.MapHub<HubService>("/chat");
             });
 
             SampleData.Initialize(context);

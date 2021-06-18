@@ -50,7 +50,6 @@ namespace Object_B.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);

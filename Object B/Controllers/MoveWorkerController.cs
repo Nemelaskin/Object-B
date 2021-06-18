@@ -1,29 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using Object_B.Models.Context;
-using Newtonsoft.Json;
+using Object_B.Services;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Object_B.Controllers
 {
-    public class MoveWorkerController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class MoveWorkerController : ControllerBase
     {
         AllDataContext context;
-        public MoveWorkerController(AllDataContext context)
+        IHubContext<HubService> hubContext;
+        public MoveWorkerController(AllDataContext context, IHubContext<HubService> hubContext)
         {
             this.context = context;
-        }
-        public IActionResult Index()
-        {
-            return View();
+            this.hubContext = hubContext;
         }
 
-
-        [HttpGet]
-        public string GetSensors()
+        
+        [HttpGet("EmitationMove")]
+        public async System.Threading.Tasks.Task<IActionResult> MoveWorkerEmitationAsync()
         {
-            var sensocrs = context.Sensors;
-            var str = JsonConvert.SerializeObject(sensocrs);
-            return str;
+            MoveEmitationService.EmitationMoveWorker(hubContext, context);
+            return Ok();
+        }
+        [HttpGet("StopSend")]
+        public IActionResult StopSend()
+        {
+            MoveEmitationService.StopTimerSendForListeners();
+            return Ok();
         }
     }
 }
