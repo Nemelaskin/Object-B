@@ -13,12 +13,23 @@ namespace Object_B.Services
         public static async void EmitationMoveWorker(IHubContext<HubService> hubContext, AllDataContext context)
         {
             var sensocrs = context.Sensors.ToList();
-            t = new Timer(async state => { 
+            var num = 0;
+            t = new Timer(async state => {
                 for(int i = 0; i < sensocrs.Count; i++)
                 {
                     var coordinates = sensocrs[i].Coordinates.Split('.');
-                    coordinates[0] = (Convert.ToInt32(coordinates[0]) - 10).ToString();
-                    sensocrs[i].Coordinates = string.Join('.', coordinates);
+                    if(num!= 65)
+                    {
+                        coordinates[0] = (Convert.ToInt32(coordinates[0]) - 3).ToString();
+                        sensocrs[i].Coordinates = string.Join('.', coordinates);
+                        num++;
+                    }
+                    else
+                    {
+                        coordinates[1] = (Convert.ToInt32(coordinates[1]) - 3).ToString();
+                        sensocrs[i].Coordinates = string.Join('.', coordinates);
+                    }
+
                 }
                 var message = JsonConvert.SerializeObject(sensocrs);
                 await hubContext.Clients.All.SendAsync("Receive", message);

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Object_B.Models.Context
 {
@@ -12,6 +11,7 @@ namespace Object_B.Models.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Visit> Visits { get; set; }
         public DbSet<Sensor> Sensors { get; set; }
+        public DbSet<News> News { get; set; }
 
         public AllDataContext(DbContextOptions<AllDataContext> options)
             : base(options)

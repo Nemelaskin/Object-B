@@ -44,7 +44,7 @@ namespace Object_B
                     ValidateIssuerSigningKey = true,
                 };
             });
-
+            services.AddTransient<IMapSaveService, MapSaveService>();
             services.AddSignalR();
             services.AddControllersWithViews();
             string connection = Configuration.GetConnectionString("DefaultConnection");

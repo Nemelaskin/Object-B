@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Object_B.Models;
 using Object_B.Models.Context;
 using Microsoft.Extensions.Options;
@@ -28,9 +25,9 @@ namespace Object_B.Controllers
         [HttpPost]
         public IActionResult Login([FromBody]Login request)
         {
-            var user = AutherizationUser(request.Email, request.Password);
+            var user = AutherizationUser(request.Email);
 
-            if(user != null)
+            if(BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 JWT jwt = new JWT(authOptions);
                 var token = jwt.GenerateJWT(user);
@@ -50,9 +47,9 @@ namespace Object_B.Controllers
             return Ok("Okey");
         }
 
-        private User AutherizationUser(string email, string password)
+        private User AutherizationUser(string email)
         {
-            return _context.Users.Include(u => u.Role).FirstOrDefault<User>(u => u.Email == email && u.Password == password);
+            return _context.Users.Include(u => u.Role).FirstOrDefault<User>(u => u.Email == email);
         }
     }
 }

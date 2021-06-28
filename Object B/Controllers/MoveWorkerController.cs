@@ -19,7 +19,7 @@ namespace Object_B.Controllers
 
         
         [HttpGet("EmitationMove")]
-        public async System.Threading.Tasks.Task<IActionResult> MoveWorkerEmitationAsync()
+        public ActionResult MoveWorkerEmitationAsync()
         {
             MoveEmitationService.EmitationMoveWorker(hubContext, context);
             return Ok();
@@ -28,6 +28,15 @@ namespace Object_B.Controllers
         public IActionResult StopSend()
         {
             MoveEmitationService.StopTimerSendForListeners();
+            return Ok();
+        }
+        
+        [HttpGet("TestUDP")]
+        public IActionResult testingUDP()
+        {
+            System.Console.WriteLine("OpenUdp. Port : 8001");
+            UdpClientService.AcceptCoordinates();
+            System.Console.WriteLine("CloseUpd. Port : 8001");
             return Ok();
         }
     }

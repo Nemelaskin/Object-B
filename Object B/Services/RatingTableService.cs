@@ -3,7 +3,6 @@ using Object_B.Models.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Object_B.Services
 {
@@ -14,7 +13,7 @@ namespace Object_B.Services
             var users = context.Users.ToList();
             var visitsTemp = context.Visits.ToList();
 
-            CompareUsers CompUsers = new CompareUsers();
+            CompareUsersService CompUsers = new CompareUsersService();
 
 
 

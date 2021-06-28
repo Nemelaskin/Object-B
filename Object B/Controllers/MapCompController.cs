@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Object_B.Models.Context;
@@ -24,7 +23,6 @@ namespace Object_B.Controllers
         [HttpGet("CreateRoom")]
         public string CreateRoom(int selectRoomId, string newRoom = "")
         {
-            Console.WriteLine(newRoom);
             if (newRoom != null)
             {
                 var room = context.Rooms.Find(selectRoomId);

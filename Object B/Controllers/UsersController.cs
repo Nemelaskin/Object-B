@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +51,8 @@ namespace Object_B.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            string passHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.Password = passHash;
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 

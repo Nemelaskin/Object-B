@@ -10,8 +10,8 @@ using Object_B.Models.Context;
 namespace Object_B.Migrations
 {
     [DbContext(typeof(AllDataContext))]
-    [Migration("20210603190204_AddCompanyMigration")]
-    partial class AddCompanyMigration
+    [Migration("20210625040213_In")]
+    partial class In
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,6 +40,24 @@ namespace Object_B.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Object_B.Models.News", b =>
+                {
+                    b.Property<int>("NewsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Heading")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NewsId");
+
+                    b.ToTable("News");
                 });
 
             modelBuilder.Entity("Object_B.Models.Position", b =>
@@ -128,9 +146,6 @@ namespace Object_B.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -153,8 +168,6 @@ namespace Object_B.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("PositionId");
 
@@ -212,12 +225,6 @@ namespace Object_B.Migrations
 
             modelBuilder.Entity("Object_B.Models.User", b =>
                 {
-                    b.HasOne("Object_B.Models.Company", "company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Object_B.Models.Position", "Position")
                         .WithMany()
                         .HasForeignKey("PositionId")
@@ -229,8 +236,6 @@ namespace Object_B.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("company");
 
                     b.Navigation("Position");
 

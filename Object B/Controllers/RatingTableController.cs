@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Object_B.Models;
 using Object_B.Models.Context;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Object_B.Services;
 
 namespace Object_B.Controllers

@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using Object_B.Models.Context;
-using Microsoft.AspNetCore.Hosting;
 using Object_B.Models;
 using Object_B.Services;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Linq;
 
 namespace Object_B.Controllers
@@ -15,11 +12,11 @@ namespace Object_B.Controllers
     public class MapController : ControllerBase
     {
         AllDataContext _context;
-        IWebHostEnvironment _appEnvironment;
-        public MapController(AllDataContext context, IWebHostEnvironment appEnviroment)
+        IMapSaveService mapSave;
+        public MapController(AllDataContext context, IMapSaveService mapSave)
         {
             _context = context;
-            _appEnvironment = appEnviroment;
+            this.mapSave = mapSave;
         }
 
         [HttpGet("ViewMap")]
@@ -43,8 +40,7 @@ namespace Object_B.Controllers
         {
             if (uploadedFile != null)
             {
-                MapSaveService mapSave = new MapSaveService(_context);
-                string path = mapSave.SaveMapToRelativePath(uploadedFile, @"\res\Maps");
+                string path = mapSave.SaveMapToRelativePath(uploadedFile, @"\Maps");
                 if (path != "")
                 {
                     try

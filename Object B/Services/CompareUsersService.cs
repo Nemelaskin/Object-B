@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Object_B.Models;
 
 namespace Object_B
 {
     
-    class CompareUsers : IComparer<RatingTable>
+    class CompareUsersService : IComparer<RatingTable>
     {
         public int Compare(RatingTable x, RatingTable y)
         {
