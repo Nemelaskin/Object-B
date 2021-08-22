@@ -49,7 +49,7 @@ namespace Object_B.Controllers
         [HttpPost]
         public async Task<ActionResult<Position>> PostPosition(Position position)
         {
-            _context.Positions.Add(position);
+            _context.Positions.Add(position); 
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPosition", new { id = position.PositionId }, position);

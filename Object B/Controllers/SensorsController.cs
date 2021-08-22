@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Object_B.Models;
@@ -39,13 +38,35 @@ namespace Object_B.Controllers
             return sensor;
         }
 
-        [HttpPut]
-        public async Task<IActionResult> PutSensor(Sensor sensor)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutSensor(int id, Sensor sensor)
         {
+            if (id != sensor.SensorId)
+            {
+                return BadRequest();
+            }
+
             _context.Entry(sensor).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!SensorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
             return NoContent();
         }
+
         [HttpPost]
         public async Task<ActionResult<Sensor>> PostSensor(Sensor sensor)
         {
@@ -54,6 +75,7 @@ namespace Object_B.Controllers
 
             return CreatedAtAction("GetSensor", new { id = sensor.SensorId }, sensor);
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSensor(int id)
         {
@@ -67,6 +89,11 @@ namespace Object_B.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private bool SensorExists(int id)
+        {
+            return _context.Sensors.Any(e => e.SensorId == id);
         }
     }
 }

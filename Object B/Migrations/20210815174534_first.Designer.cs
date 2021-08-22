@@ -10,15 +10,15 @@ using Object_B.Models.Context;
 namespace Object_B.Migrations
 {
     [DbContext(typeof(AllDataContext))]
-    [Migration("20210405121905_fixUser")]
-    partial class fixUser
+    [Migration("20210815174534_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Object_B.Models.Company", b =>
@@ -40,6 +40,24 @@ namespace Object_B.Migrations
                     b.HasKey("CompanyId");
 
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Object_B.Models.News", b =>
+                {
+                    b.Property<int>("NewsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Heading")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NewsId");
+
+                    b.ToTable("News");
                 });
 
             modelBuilder.Entity("Object_B.Models.Position", b =>
@@ -105,14 +123,17 @@ namespace Object_B.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Coordinates")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NameSensor")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<double>("X")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Y")
+                        .HasColumnType("float");
 
                     b.HasKey("SensorId");
 
@@ -165,7 +186,7 @@ namespace Object_B.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("RoomId")
+                    b.Property<int>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -228,7 +249,9 @@ namespace Object_B.Migrations
                 {
                     b.HasOne("Object_B.Models.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Object_B.Models.User", "User")
                         .WithMany()

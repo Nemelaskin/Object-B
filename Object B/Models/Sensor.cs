@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace Object_B.Models
 {
     public class Sensor
@@ -11,7 +7,8 @@ namespace Object_B.Models
         public string NameSensor { get; set; }
         public User User { get; set; }
         public int UserId { get; set; }
-        public string Coordinates { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
 
     }
 }

@@ -17,12 +17,12 @@ namespace Object_B.Services
 
 
 
-            var dateNow = DateTime.Now.ToString().Split('.');
+            var dateNow = DateTime.Now.ToString().Split('/');
             dateNow[2] = dateNow[2].Split(' ')[0];
             List<Visit> visits = new List<Visit>();
             for (int i = 0; i < visitsTemp.Count(); i++)
             {
-                var dateVisit = visitsTemp[i].VisitTime.ToString().Split('.');
+                var dateVisit = visitsTemp[i].VisitTime.ToString().Split('/');
                 dateVisit[2] = dateVisit[2].Split(' ')[0];
                 if (dateVisit[1] == dateNow[1] && dateVisit[2] == dateNow[2])
                     visits.Add(visitsTemp[i]);

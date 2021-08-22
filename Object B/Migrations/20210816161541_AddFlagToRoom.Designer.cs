@@ -10,15 +10,15 @@ using Object_B.Models.Context;
 namespace Object_B.Migrations
 {
     [DbContext(typeof(AllDataContext))]
-    [Migration("20210314193425_FirstMig")]
-    partial class FirstMig
+    [Migration("20210816161541_AddFlagToRoom")]
+    partial class AddFlagToRoom
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Object_B.Models.Company", b =>
@@ -34,14 +34,30 @@ namespace Object_B.Migrations
                     b.Property<string>("NameCompany")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OwnerUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("Owner")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CompanyId");
 
-                    b.HasIndex("OwnerUserId");
-
                     b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("Object_B.Models.News", b =>
+                {
+                    b.Property<int>("NewsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Heading")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NewsId");
+
+                    b.ToTable("News");
                 });
 
             modelBuilder.Entity("Object_B.Models.Position", b =>
@@ -84,11 +100,14 @@ namespace Object_B.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CompanyId")
+                    b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<string>("CoordinatesRoom")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsACoridor")
+                        .HasColumnType("bit");
 
                     b.Property<string>("NameRoom")
                         .HasColumnType("nvarchar(max)");
@@ -107,14 +126,17 @@ namespace Object_B.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Coordinates")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NameSensor")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<double>("X")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Y")
+                        .HasColumnType("float");
 
                     b.HasKey("SensorId");
 
@@ -142,10 +164,10 @@ namespace Object_B.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PositionId")
+                    b.Property<int>("PositionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("SecondName")
@@ -167,10 +189,10 @@ namespace Object_B.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("RoomId")
+                    b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("VisitTime")
@@ -185,20 +207,13 @@ namespace Object_B.Migrations
                     b.ToTable("Visits");
                 });
 
-            modelBuilder.Entity("Object_B.Models.Company", b =>
-                {
-                    b.HasOne("Object_B.Models.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerUserId");
-
-                    b.Navigation("Owner");
-                });
-
             modelBuilder.Entity("Object_B.Models.Room", b =>
                 {
                     b.HasOne("Object_B.Models.Company", "Company")
                         .WithMany("Room")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });
@@ -207,7 +222,9 @@ namespace Object_B.Migrations
                 {
                     b.HasOne("Object_B.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -216,11 +233,15 @@ namespace Object_B.Migrations
                 {
                     b.HasOne("Object_B.Models.Position", "Position")
                         .WithMany()
-                        .HasForeignKey("PositionId");
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Object_B.Models.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Position");
 
@@ -231,11 +252,15 @@ namespace Object_B.Migrations
                 {
                     b.HasOne("Object_B.Models.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Object_B.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Room");
 

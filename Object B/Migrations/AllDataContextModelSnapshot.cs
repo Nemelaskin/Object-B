@@ -16,7 +16,7 @@ namespace Object_B.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Object_B.Models.Company", b =>
@@ -104,6 +104,9 @@ namespace Object_B.Migrations
                     b.Property<string>("CoordinatesRoom")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsACoridor")
+                        .HasColumnType("bit");
+
                     b.Property<string>("NameRoom")
                         .HasColumnType("nvarchar(max)");
 
@@ -121,14 +124,17 @@ namespace Object_B.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Coordinates")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NameSensor")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<double>("X")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Y")
+                        .HasColumnType("float");
 
                     b.HasKey("SensorId");
 
