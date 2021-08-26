@@ -2,23 +2,22 @@
 using Object_B.Models.Context;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Object_B.Services
 {
-    public class CalculationCoordinates
+    public class CalculationCoordinatesService
     {
         private readonly AllDataContext context;
 
-        public CalculationCoordinates(AllDataContext context)
+        public CalculationCoordinatesService(AllDataContext context)
         {
             this.context = context;
         }
 
-        async public Task<Square[]> NumberToCoordinates(int id)
+         public Square[] NumberToCoordinates(int id)
         {
             int count = 52;
-            Room room = await context.Rooms.FindAsync(id);
+            Room room =  context.Rooms.Find(id);
             try
             {
                 int[] coords = room.CoordinatesRoom.Split(' ').Select(u => Convert.ToInt32(u)).ToArray();

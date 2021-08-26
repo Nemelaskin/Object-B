@@ -1,7 +1,5 @@
 ﻿using Object_B.Models;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using Object_B.Models.Context;
@@ -31,18 +29,18 @@ namespace Object_B.Services
                 string format = tempFormat[0];
                 string nameCompany = "";
                 byte[] bytes = Convert.FromBase64String(map[1]);
-                using (Image image = Image.FromStream(new MemoryStream(bytes)))
+                using (System.Drawing.Image image = System.Drawing.Image.FromStream(new MemoryStream(bytes)))
                 {
                     directory = directory + path;
                     switch (format)
                     {
                         case "png":
-                            image.Save(directory + @"\MainCompanyMap.png", ImageFormat.Png);
+                            image.Save(directory + @"\MainCompanyMap.png", System.Drawing.Imaging.ImageFormat.Png);
                             nameCompany = @"\MainCompanyMap.png";
                             directory += @"\MainCompanyMap.png";
                             break;
                         case "jpeg":
-                            image.Save(directory + @"\MainCompanyMap.jpeg", ImageFormat.Jpeg);
+                            image.Save(directory + @"\MainCompanyMap.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
                             nameCompany = @"\MainCompanyMap.jpeg";
                             directory += @"\MainCompanyMap.jpeg";
                             break;

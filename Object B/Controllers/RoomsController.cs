@@ -36,7 +36,7 @@ namespace Object_B.Controllers
         [HttpPut]
         public async Task<IActionResult> PutRoom(Room room)
         {
-
+            
             _context.Entry(room).State = EntityState.Modified;
 
 
@@ -48,6 +48,7 @@ namespace Object_B.Controllers
         [HttpPost]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
+            
             _context.Rooms.Add(room);
             await _context.SaveChangesAsync();
 

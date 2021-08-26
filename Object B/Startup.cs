@@ -9,6 +9,9 @@ using Object_B.Models;
 using Auth.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Object_B.Services;
+using Object_B.hubs;
+using System.Linq;
+using static Object_B.Services.CalculationCoordinatesService;
 
 namespace Object_B
 {
@@ -25,7 +28,7 @@ namespace Object_B
         {
             var authOptions = Configuration.GetSection("Auth").Get<AuthOptions>();
 
-            
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
             {
@@ -49,7 +52,8 @@ namespace Object_B
             services.AddControllersWithViews();
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AllDataContext>(options => options.UseSqlServer(connection));
-
+            services.AddSingleton<SingltonService>();
+            services.AddTransient<CreateVisitService>();
             var authOptionsConfiguration = Configuration.GetSection("Auth");
             services.Configure<AuthOptions>(authOptionsConfiguration);
 
@@ -59,7 +63,7 @@ namespace Object_B
 
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AllDataContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AllDataContext context, SingltonService singlton)
         {
             if (env.IsDevelopment())
             {
@@ -70,9 +74,9 @@ namespace Object_B
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
-
+            ClearUsers(context, singlton);
             app.UseRouting();
-            
+
             app.UseCors(builder =>
             {
                 builder.AllowAnyMethod()
@@ -92,5 +96,17 @@ namespace Object_B
             SampleData.Initialize(context);
         }
 
+        private static void ClearUsers(AllDataContext context, SingltonService singlton)
+        {
+            singlton.dictionaryCoords = new System.Collections.Generic.Dictionary<string, Square>();
+            var convertRoomsService = new ConvertRoomsService(context);
+            singlton.rooms = convertRoomsService.CalculationCoordinates();
+            var users = context.Users.ToList();
+            foreach (var i in users)
+            {
+                i.IsActive = false;
+            }
+            context.SaveChanges();
+        }
     }
 }

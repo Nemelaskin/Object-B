@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Object_B.Models.Context;
 
 namespace Object_B.Migrations
 {
     [DbContext(typeof(AllDataContext))]
-    partial class AllDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210824110224_te")]
+    partial class te
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,22 +58,6 @@ namespace Object_B.Migrations
                     b.HasKey("NewsId");
 
                     b.ToTable("News");
-                });
-
-            modelBuilder.Entity("Object_B.Models.OnlineUser", b =>
-                {
-                    b.Property<string>("ConnectionId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("time")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ConnectionId");
-
-                    b.ToTable("OnlineUsers");
                 });
 
             modelBuilder.Entity("Object_B.Models.Position", b =>
